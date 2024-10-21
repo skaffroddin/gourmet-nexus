@@ -1,0 +1,103 @@
+Registration Structure for Recipes AI System
+1. Common Registration Fields (For Both Users and Chefs)
+First Name:
+
+Type: Text
+Required: Yes
+Last Name:
+
+Type: Text
+Required: Yes
+Email:
+
+Type: Email
+Required: Yes
+Note: This will be used for OTP verification.
+Phone:
+
+Type: Telephone
+Required: No
+Password:
+
+Type: Password
+Required: Yes (if not using social signup)
+Role Selection:
+
+Options:
+User
+Chef
+Required: Yes
+Terms and Conditions:
+
+Type: Checkbox
+Required: Yes
+Label: "I agree to the Terms and Conditions"
+Social Signup Options:
+
+Options:
+Sign up with Google
+Sign up with Facebook
+Sign up with Twitter
+Note: If a user selects a social signup option, their account information (e.g., name, email, profile picture) will be fetched from the respective social account.
+2. User Preferences (Displayed if "User" is Selected)
+Dietary Preferences:
+
+Type: Multi-select dropdown
+Options:
+Vegetarian
+Vegan
+Gluten-Free
+Dairy-Free
+Nut-Free
+Keto
+Paleo
+Other (text box for specification)
+Cuisine Preferences:
+
+Type: Multi-select dropdown
+Options:
+Italian
+Indian
+Mexican
+Chinese
+Mediterranean
+American
+Other (text box for specification)
+3. Chef Qualifications (Displayed if "Chef" is Selected)
+Work Experience:
+
+Type: Textarea
+Placeholder: "Describe your work experience..."
+Education:
+
+Type: Text
+Placeholder: "Culinary degree or relevant education"
+Expertise:
+
+Type: Multi-select dropdown
+Options:
+Baking
+Grilling
+Vegetarian Cooking
+International Cuisine
+Pastry Chef
+Food Presentation
+Other (text box for specification)
+4. OTP Verification Process
+After the registration form is submitted:
+OTP Generation: An OTP is generated and sent to the user’s provided email address.
+OTP Input Field:
+Type: Text
+Placeholder: "Enter the OTP sent to your email"
+Required: Yes
+Verification Button:
+Label: "Verify OTP"
+Action: Validates the entered OTP against the generated OTP.
+Success/Failure Message:
+On successful verification, proceed to create the user account.
+On failure, display an error message.
+5. Chef Account Activation
+Admin Review Process:
+After a chef registers, their profile goes into a pending state until an admin reviews the information.
+The chef receives a notification indicating that their account is under review.
+Upon approval by the admin, the chef’s account is activated, and they receive a notification.
