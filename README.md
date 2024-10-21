@@ -57,7 +57,7 @@ The primary objective of Gourmet Nexus is to create a vibrant community where us
 | **Category**      | **Technology**                        |
 |-------------------|--------------------------------------|
 | **Backend**       | Laravel (PHP Framework)              |
-| **Frontend**      | Tailwind CSS, jQuery, plain JavaScript |
+| **Frontend**      | Tailwind CSS, jQuery, JavaScript      |
 | **Database**      | MySQL                                |
 | **AI Integration**| ChatGPT API                          |
 | **Payment**       | Stripe or PayPal                     |
@@ -154,9 +154,24 @@ Once the application is running, navigate to `http://localhost:8000` in your bro
 ---
 
 ## Credits
-© 2024 Your Name  
-Follow me on:  
-- [LinkedIn](your-linkedin-url)  
-- [Twitter](your-twitter-url)  
-- [Portfolio](your-portfolio-url)  
+
+```ascii
++---------------------+-------------------+-------------------+
+|   Role              |   Developer Name  |   Links            |
++---------------------+-------------------+-------------------+
+|   Frontend Developer|   Subhrajit Adak   | [GitHub](https://github.com/SubhrajitAdak)  |
+|                     |                   | [LinkedIn](https://linkedin.com/in/SubhrajitAdak)  |
++---------------------+-------------------+-------------------+
+|   Backend Developer |   Saikat Das       | [GitHub](https://github.com/SaikatDas)  |
+|                     |                   | [LinkedIn](https://linkedin.com/in/SaikatDas)  |
++---------------------+-------------------+-------------------+
+|   Full Stack Dev    |   Sekh Affroddin   | [GitHub](https://github.com/skaffroddin)  |
+|                     |                   | [LinkedIn](https://linkedin.com/in/skaffroddin) |
+|                     |                   | [Portfolio](https://your-portfolio-url.com)   |
++---------------------+-------------------+-------------------+
+```
+
+Project developed for **Ejob India**.
+
+© 2024 Gourmet Nexus Team
 ```
