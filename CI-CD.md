@@ -49,18 +49,18 @@ This document outlines the full project development workflow for a team working 
            │
 ┌──────────┴─────────────┐
 │                        │
-│   Feature Branches      │
+│   Feature Branches     │
 │                        │
 │  ┌───────────────────┐ │
-│  │  Feature-A (Affy)  │ │
+│  │  Feature-A (Affy)  ││
 │  └───────────────────┘ │
 │                        │
 │  ┌───────────────────┐ │
-│  │ Feature-B (Saikat) │ │
+│  │ Feature-B (Saikat) ││
 │  └───────────────────┘ │
 │                        │
 │  ┌───────────────────┐ │
-│  │Feature-C (Subhrajit)│ │
+│  │Feature-C (Subhrajit)│ 
 │  └───────────────────┘ │
 └───────────▲────────────┘
             │
@@ -76,8 +76,7 @@ This document outlines the full project development workflow for a team working 
 Each developer clones the repository to their local machine:
 
 ```bash
-git clone https://github.com/yourusername/yourproject.git
-cd yourproject
+git clone https://github.com/skaffroddin/gourmet-nexus
 ```
 
 #### **2. Create and Work on a Feature Branch**
