@@ -1,40 +1,50 @@
 
 
 ## **Final Project Development Workflow**
+### **Project Overview**
+This document outlines the full project development workflow for a team working on a Laravel, MySQL, TailwindCSS, and jQuery-based application. It details branch structure, development processes, and CI/CD pipelines using **Heroku** for backend deployment and **Netlify** for frontend hosting.
 
-- **Project Lead (Affroddin)**: Manages the project, merges branches, oversees deployments, and also works on feature development (Feature A).
+- **Project Lead (Affroddin)**: Manages the project, merges branches, oversees deployments and also works on feature development (Feature A).
 - **Developers (Saikat, Subhrajit)**: Each works on specific feature branches (`feature-B`, `feature-C`), pushes code for testing, and participates in the development process.
 - **Hotfix Workflow**: For urgent bug fixes.
 
-### **Deployment Overview**
-- **Backend (Heroku)**: The backend will be deployed on Heroku with the JawsDB MySQL add-on.
-- **Frontend (Netlify)**: Static assets from the frontend will be automatically deployed to Netlify.
+---
 
-### **Git Branches**
-- **`main`**: The production-ready branch. Final features that pass tests are merged into this branch and deployed automatically.
-- **`test`**: The testing branch where features are merged to be validated before deployment.
-- **`feature-A`, `feature-B`, `feature-C`**: Feature branches for each developer.
-- **`hotfix-*`**: Temporary branches for urgent bug fixes.
+### **Branches Structure**
+- **`main`**: The production branch where stable, tested, and production-ready code is deployed.
+- **`test`**: The branch used for staging and testing the code. Once the code passes all tests, it is merged into `main`.
+- **`develop`**: The primary development branch where all feature branches are merged before moving to the test environment.
+- **Feature Branches**:
+  - **`feature-A (Affroddin)`**: Handles specific feature A development.
+  - **`feature-B (Saikat)`**: Handles specific feature B development.
+  - **`feature-C (Subhrajit)`**: Handles specific feature C development.
+- **Hotfix Branches**: Created when urgent bug fixes need to be applied directly to production.
 
 ---
 
-### **ASCII Diagram with Developer Names**
+### **Diagram - Git Workflow with Branching Strategy**
 
-```plaintext
+```
                    ┌──────────────┐
                    │   Main       │────────────► Production
-                   │  (Deploy)    │            (Heroku, Netlify)
-                   └───────▲──────┘
+                   │  (Deploy)    │            (Heroku Backend,
+                   └───────▲──────┘            Netlify Frontend)
                            │
-                           │ Merge
+                           │ Merge (After Test Passes)
                            │
-           ┌───────────────┴──────────────┐
-           │                              │
+                   ┌───────┴────────┐
+                   │   Test         │◄──────────┐
+                   │(Staging Env.)  │           │
+                   └───────▲────────┘           │
+                           │                    │
+                           │ Merge (From develop)
+           ┌───────────────┴──────────────┐      │
+           │                              │      │
    ┌───────▼───────────┐          ┌───────▼───────────┐
-   │   Test            │          │  Hotfix           │
-   │(Pre-production)   │◄─────────┤ (Urgent Fixes)    │
+   │   Develop         │          │  Hotfix           │
+   │(Development Stage)│◄─────────┤ (Urgent Fixes)    │
    └───────▲───────────┘          └───────▲───────────┘
-           │                             Merge
+           │                             Merge into Main
            │
            │
 ┌──────────┴─────────────┐
@@ -54,113 +64,120 @@
 │  └───────────────────┘ │
 └───────────▲────────────┘
             │
-        Create New Branch
+        Create New Branch for Each Feature
 ```
 
 ---
 
-### **Git Commands for Developers**
-
-Here are the essential Git commands and steps for the developers to follow:
+### **Git Workflow and Commands**
 
 #### **1. Clone the Repository**
+
+Each developer clones the repository to their local machine:
 
 ```bash
 git clone https://github.com/yourusername/yourproject.git
 cd yourproject
 ```
 
-#### **2. Create a Feature Branch**
+#### **2. Create and Work on a Feature Branch**
 
-Each developer creates their assigned feature branch:
+Before starting any work, developers must create a feature branch off `develop`:
 
 ```bash
-# For Affroddin (Feature A)
+# Switch to develop branch
+git checkout develop
+
+# Create a new feature branch (replace 'feature-A' with your branch)
 git checkout -b feature-A
-
-# For Saikat (Feature B)
-git checkout -b feature-B
-
-# For Subhrajit (Feature C)
-git checkout -b feature-C
 ```
 
-#### **3. Make Changes, Add, and Commit**
-
-After making necessary changes:
+Make changes to the code, then add and commit those changes:
 
 ```bash
 git add .
-git commit -m "Add feature X implementation"
+git commit -m "Implemented feature A"
 ```
 
-#### **4. Push the Feature Branch**
+#### **3. Push Feature Branch**
 
-Developers push their branches for testing:
+Push the branch to the remote repository for code review:
 
 ```bash
-git push origin feature-A  # or feature-B, feature-C
+git push origin feature-A  # for Affroddin's feature-A branch
+git push origin feature-B  # for Saikat's feature-B branch
+git push origin feature-C  # for Subhrajit's feature-C branch
 ```
 
-#### **5. Merge Feature Branch into `test`**
+#### **4. Merge Feature Branch into `develop`**
 
-To test the feature, developers or project lead will merge their feature branches into the `test` branch:
+Once the feature is complete, the developer or project lead will merge the feature branch into `develop`:
+
+```bash
+# Switch to develop branch
+git checkout develop
+
+# Pull the latest updates
+git pull origin develop
+
+# Merge the feature branch
+git merge feature-A  # Replace with the appropriate branch
+
+# Push the updated develop branch
+git push origin develop
+```
+
+#### **5. Test and Merge to `test` Branch**
+
+The project lead (Affroddin) will merge `develop` into `test` for staging/testing purposes:
 
 ```bash
 # Switch to test branch
 git checkout test
 
-# Pull the latest test branch
+# Pull latest updates from test branch
 git pull origin test
 
-# Merge the feature branch
-git merge feature-A  # or feature-B, feature-C
+# Merge develop into test
+git merge develop
 
 # Push the changes
 git push origin test
 ```
 
-If tests pass, move to production. If tests fail, fix the issues and repeat.
+#### **6. Merge `test` to `main` for Production**
 
----
-
-#### **6. Merge into `main`**
-
-Once tests pass, the project lead (Affroddin) merges into `main` for production deployment:
+If the tests pass successfully, `test` is merged into `main` for final production deployment:
 
 ```bash
 # Switch to main branch
 git checkout main
 
-# Pull the latest main branch
+# Pull latest updates from main branch
 git pull origin main
 
-# Merge the test branch into main
+# Merge test branch into main
 git merge test
 
-# Push to main
+# Push the main branch for production
 git push origin main
 ```
 
----
+#### **7. Hotfixes Workflow**
 
-#### **7. Hotfix Branch Workflow**
-
-If there are urgent bugs to fix, the project lead creates a hotfix branch:
+In the event of urgent bugs, a hotfix branch is created and directly merged into `main`:
 
 ```bash
-# Switch to main and pull latest changes
+# Switch to main and pull latest updates
 git checkout main
 git pull origin main
 
 # Create a new hotfix branch
 git checkout -b hotfix/fix-critical-bug
 
-# Make changes, add and commit
+# Make changes, commit and push
 git add .
 git commit -m "Fix critical bug"
-
-# Push the hotfix branch
 git push origin hotfix/fix-critical-bug
 
 # Merge hotfix into main
@@ -177,7 +194,7 @@ git push origin --delete hotfix/fix-critical-bug
 
 ### **CI/CD Pipeline**
 
-A GitHub Actions pipeline will automatically trigger tests whenever code is pushed to the `test` branch. If all tests pass, the changes will be merged into `main` and automatically deployed to **Heroku** (backend) and **Netlify** (frontend).
+Using **GitHub Actions** for automated tests, linting, and deployment. The code will be automatically tested on the `test` branch and deployed to production when merged into `main`.
 
 Sample `.github/workflows/ci.yml`:
 
@@ -217,9 +234,10 @@ jobs:
 
 ---
 
-### **Deployment Setup**
+### **Deployment Platforms**
 
-- **Heroku**: The backend is hosted on Heroku with the JawsDB MySQL add-on.
-- **Netlify**: The frontend (TailwindCSS and jQuery) is hosted on Netlify for fast performance and automatic updates.
+- **Heroku**: The Laravel backend is deployed on Heroku, using the free **JawsDB MySQL** add-on.
+- **Netlify**: The static frontend (TailwindCSS, jQuery) is hosted on Netlify for fast, automated deployment.
 
 ---
+
