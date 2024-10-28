@@ -86,6 +86,7 @@
                                         class="absolute -bottom-16 -left-16 h-40 w-[calc(100%+8rem)] bg-gradient-to-b from-transparent via-white to-white dark:via-zinc-900 dark:to-zinc-900"
                                     ></div>
                                 </div>
+                                <div> <h1>Saikat</h1></div>
 
                                 <div class="relative flex items-center gap-6 lg:items-end">
                                     <div id="docs-card-content" class="flex items-start gap-6 lg:flex-col">
