@@ -3,7 +3,7 @@ name: Deploy Project to InfinityFree
 on:
   push:
     branches:
-      - main   # Change this to your deployment branch
+      - main   # Update to your deployment branch
 
 jobs:
   deploy:
@@ -16,12 +16,27 @@ jobs:
     - name: Set up PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2'    # Use the version compatible with your project
+        php-version: '8.2'   # Adjust based on project needs
         extensions: mbstring, intl, mysqli, pdo, pdo_mysql
         tools: composer
 
     - name: Install Dependencies
       run: |
         composer install --no-dev --prefer-dist --optimize-autoloader
-        **/.env.example
-          .env
+      env:
+        COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload via FTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      with:
+        server: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        port: ${{ secrets.FTP_PORT }}
+        local-dir: './'
+        server-dir: '/htdocs/'
+        exclude: |
+          **/.git*
+          **/node_modules*
+          **/tests*
+          .env  # Exclude .env to keep it private
