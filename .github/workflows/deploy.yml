@@ -24,20 +24,7 @@ jobs:
       run: |
         composer install --no-dev --prefer-dist --optimize-autoloader
 
-    - name: Upload via FTP
-      uses: SamKirkland/FTP-Deploy-Action@4.3.0
-      with:
-        server: ${{ secrets.FTP_HOST }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        port: ${{ secrets.FTP_PORT }}
-        local-dir: './'                  # Adjust if your project is not in the root directory
-        server-dir: '/htdocs/'           # Path to the root of your web server on InfinityFree
-        exclude: |
-          **/.git*
-          **/node_modules*
-          **/vendor*
-          **/tests*
+    
           **/.env.example
           .env
 
