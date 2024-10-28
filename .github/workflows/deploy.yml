@@ -1,0 +1,53 @@
+name: Deploy Project to InfinityFree
+
+on:
+  push:
+    branches:
+      - main   # Change this to your deployment branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'    # Use the version compatible with your project
+        extensions: mbstring, intl, mysqli, pdo, pdo_mysql
+        tools: composer
+
+    - name: Install Dependencies
+      run: |
+        composer install --no-dev --prefer-dist --optimize-autoloader
+
+    - name: Upload via FTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      with:
+        server: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        port: ${{ secrets.FTP_PORT }}
+        local-dir: './'                  # Adjust if your project is not in the root directory
+        server-dir: '/htdocs/'           # Path to the root of your web server on InfinityFree
+        exclude: |
+          **/.git*
+          **/node_modules*
+          **/vendor*
+          **/tests*
+          **/.env.example
+          .env
+
+    - name: Upload Vendor Folder
+      if: always()
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      with:
+        server: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        port: ${{ secrets.FTP_PORT }}
+        local-dir: './vendor'
+        server-dir: '/htdocs/vendor'
