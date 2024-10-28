@@ -23,18 +23,5 @@ jobs:
     - name: Install Dependencies
       run: |
         composer install --no-dev --prefer-dist --optimize-autoloader
-
-    
-          **/.env.example
+        **/.env.example
           .env
-
-    - name: Upload Vendor Folder
-      if: always()
-      uses: SamKirkland/FTP-Deploy-Action@4.3.0
-      with:
-        server: ${{ secrets.FTP_HOST }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        port: ${{ secrets.FTP_PORT }}
-        local-dir: './vendor'
-        server-dir: '/htdocs/vendor'
