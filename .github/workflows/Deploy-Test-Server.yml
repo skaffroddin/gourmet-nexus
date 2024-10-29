@@ -33,13 +33,6 @@ jobs:
       - name: Compile assets with Vite
         run: npm run build  # This will run 'vite build' as specified in your package.json
 
-      # Debugging step to verify secrets (mask sensitive data)
-      - name: Debug FTP Credentials
-        run: |
-          echo "FTP_HOST_TEST=${{ secrets.FTP_HOST_TEST }}"
-          echo "FTP_USERNAME_TEST=${{ secrets.FTP_USERNAME_TEST }}"
-          # Avoid echoing sensitive information like passwords
-
       - name: Upload via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
@@ -62,4 +55,3 @@ jobs:
             public/storage
           log-level: standard  # Choose from 'minimal', 'standard', or 'verbose'
           dry-run: false  # Set to 'true' for testing deployments without actual uploads
-          protocol: ftp  # Change to 'ftps' if using FTPS
