@@ -1,4 +1,4 @@
-name: Deploy to Server
+name: Deploy to FTP Server
 
 on:
   push:
@@ -42,8 +42,5 @@ jobs:
             storage/framework/views/*
             storage/temp/*
             public/storage
-
-          # Optional configurations for improved deployment:
-          log-level: info  # Set to 'debug' if you need more detailed logs
-          git-ftp-ignore: true  # Ignores files defined in `.gitignore`, helpful for large projects
+          log-level: standard  # Choose from 'minimal', 'standard', or 'verbose'
           dry-run: false  # Set to 'true' for testing deployments without actual uploads
