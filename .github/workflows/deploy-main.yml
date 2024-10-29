@@ -1,4 +1,4 @@
-name: Deploy to FTP Server
+name: Deploy to Server
 
 on:
   push:
@@ -12,6 +12,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'   # Adjust based on project needs
+          extensions: mbstring, intl, mysqli, pdo, pdo_mysql
+          tools: composer
+
       - name: Install PHP dependencies
         run: composer install --no-dev --prefer-dist --optimize-autoloader
 
@@ -21,9 +28,9 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          port: ${{ secrets.FTP_PORT }}
+          port: ${{ secrets.FTP_PORT }}  # Default is usually 21; make sure this matches your server settings
           local-dir: './'
-          server-dir: '/htdocs/'
+          server-dir: '/htdocs/'  # Target directory on the FTP server
           exclude: |
             **/.git*
             **/node_modules*
@@ -35,3 +42,8 @@ jobs:
             storage/framework/views/*
             storage/temp/*
             public/storage
+
+          # Optional configurations for improved deployment:
+          log-level: info  # Set to 'debug' if you need more detailed logs
+          git-ftp-ignore: true  # Ignores files defined in `.gitignore`, helpful for large projects
+          dry-run: false  # Set to 'true' for testing deployments without actual uploads
