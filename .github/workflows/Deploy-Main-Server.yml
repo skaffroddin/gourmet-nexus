@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main  # Deploy when changes are pushed to the 'main' branch
-  workflow_dispatch:  # Allows for manual deployment
 
 jobs:
   ftp-deploy:
@@ -16,7 +15,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.2'   # Adjust based on project needs
           extensions: mbstring, intl, mysqli, pdo, pdo_mysql
           tools: composer
 
@@ -26,13 +25,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '16'  # Specify the Node.js version you want to use
 
       - name: Install Node.js dependencies
         run: npm install
 
       - name: Compile assets with Vite
-        run: npm run build
+        run: npm run build  # This will run 'vite build' as specified in your package.json
 
       - name: Upload via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
@@ -40,19 +39,24 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          port: ${{ secrets.FTP_PORT }}  # Make sure this matches your server settings
+          port: ${{ secrets.FTP_PORT }}  # Default is usually 21; make sure this matches your server settings
           local-dir: './'
           server-dir: '/htdocs/'  # Target directory on the FTP server
           exclude: |
             **/.git*
+            **/.github*
             **/node_modules*
-            **/tests*
-            **/vendor*
-            .env
+            **/Documentation
+            CONTRIBUTING.md
+            README.md
+            SECURITY.md
+            .gitattributes
+            .gitignore
+            .github/workflows
             storage/logs/*
             storage/framework/sessions/*
             storage/framework/views/*
             storage/temp/*
             public/storage
-          log-level: standard
-          dry-run: false
+          log-level: standard  # Choose from 'minimal', 'standard', or 'verbose'
+          dry-run: false  # Set to 'true' for testing deployments without actual uploads
