@@ -1,0 +1,37 @@
+name: Deploy to FTP Server
+
+on:
+  push:
+    branches:
+      - main  # Deploy when changes are pushed to the 'main' branch
+
+jobs:
+  ftp-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install PHP dependencies
+        run: composer install --no-dev --prefer-dist --optimize-autoloader
+
+      - name: Upload via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+          local-dir: './'
+          server-dir: '/htdocs/'
+          exclude: |
+            **/.git*
+            **/node_modules*
+            **/tests*
+            **/vendor*
+            .env
+            storage/logs/*
+            storage/framework/sessions/*
+            storage/framework/views/*
+            storage/temp/*
+            public/storage
