@@ -30,8 +30,8 @@ jobs:
       - name: Install Node.js dependencies
         run: npm install
 
-      - name: Compile Tailwind CSS
-        run: npm run build  # Adjust this command if your build script is different
+      - name: Compile assets with Vite
+        run: npm run build  # This will run 'vite build' as specified in your package.json
 
       - name: Upload via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
