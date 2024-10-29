@@ -22,6 +22,17 @@ jobs:
       - name: Install PHP dependencies
         run: composer install --no-dev --prefer-dist --optimize-autoloader
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # Specify the Node.js version you want to use
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Compile Tailwind CSS
+        run: npm run build  # Adjust this command if your build script is different
+
       - name: Upload via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
