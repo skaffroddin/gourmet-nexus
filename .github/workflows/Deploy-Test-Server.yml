@@ -1,70 +1,70 @@
-name: Test Deployment Workflow
+# name: Test Deployment Workflow
 
-on:
-  push:
-    branches:
-      - test  # Use a test branch to verify the deployment setup before using it on main
+# on:
+#   push:
+#     branches:
+#       - test  # Use a test branch to verify the deployment setup before using it on main
 
-jobs:
-  deploy-test:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy-test:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Test FTP Upload
-        uses: SamKirkland/FTP-Deploy-Action@4.3.0
-        with:
-          server: ${{ secrets.FTP_HOST_TEST }}
-          username: ${{ secrets.FTP_USERNAME_TEST }}
-          password: ${{ secrets.FTP_PASSWORD_TEST }}
-          port: ${{ secrets.FTP_PORT_TEST }}
-          local-dir: ./
-          server-dir: /htdocs/  # Use a test server directory to avoid overwriting production
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/.github/**
-            **/Documentation/**
-            **/CONTRIBUTING.md
-            **/README.md
-            **/SECURITY.md
-            **/.gitattributes
-            **/.github/workflows/**
-            **/.gitignore
-            **/node_modules/**
-            **/tests/**
-            **/vendor/**
-            **/.env
-            **/storage/logs/**
-            **/storage/framework/sessions/**
-            **/storage/framework/views/**
-            **/storage/temp/**
-            **/public/storage/**
-            **/folder/.sync-state.json
-            **/.sync-state.json
-          log-level: standard
-          dry-run: false
-          state-name: .ftp-deploy-sync-state-test.json  # Separate state file for testing
+#       - name: Test FTP Upload
+#         uses: SamKirkland/FTP-Deploy-Action@4.3.0
+#         with:
+#           server: ${{ secrets.FTP_HOST_TEST }}
+#           username: ${{ secrets.FTP_USERNAME_TEST }}
+#           password: ${{ secrets.FTP_PASSWORD_TEST }}
+#           port: ${{ secrets.FTP_PORT_TEST }}
+#           local-dir: ./
+#           server-dir: /htdocs/  # Use a test server directory to avoid overwriting production
+#           exclude: |
+#             **/.git*
+#             **/.git*/**
+#             **/.github/**
+#             **/Documentation/**
+#             **/CONTRIBUTING.md
+#             **/README.md
+#             **/SECURITY.md
+#             **/.gitattributes
+#             **/.github/workflows/**
+#             **/.gitignore
+#             **/node_modules/**
+#             **/tests/**
+#             **/vendor/**
+#             **/.env
+#             **/storage/logs/**
+#             **/storage/framework/sessions/**
+#             **/storage/framework/views/**
+#             **/storage/temp/**
+#             **/public/storage/**
+#             **/folder/.sync-state.json
+#             **/.sync-state.json
+#           log-level: standard
+#           dry-run: false
+#           state-name: .ftp-deploy-sync-state-test.json  # Separate state file for testing
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, intl, mysqli, pdo, pdo_mysql
-          tools: composer
+#       - name: Set up PHP
+#         uses: shivammathur/setup-php@v2
+#         with:
+#           php-version: '8.2'
+#           extensions: mbstring, intl, mysqli, pdo, pdo_mysql
+#           tools: composer
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: '16'
 
-      - name: Install PHP dependencies
-        run: composer install --no-dev --prefer-dist --optimize-autoloader
+#       - name: Install PHP dependencies
+#         run: composer install --no-dev --prefer-dist --optimize-autoloader
 
-      # - name: Install Node.js dependencies
-      #   run: npm install
+#       # - name: Install Node.js dependencies
+#       #   run: npm install
 
-      - name: Compile assets with Vite
-        run: npm run build  # Adjust based on your asset compilation needs
+#       - name: Compile assets with Vite
+#         run: npm run build  # Adjust based on your asset compilation needs
