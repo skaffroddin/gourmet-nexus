@@ -1,62 +1,70 @@
-# name: Deploy to Main Server
+# name: Main Deployment To Server
 
 # on:
 #   push:
 #     branches:
-#       - main  # Deploy when changes are pushed to the 'main' branch
+#       - main  # Use a test branch to verify the deployment setup before using it on main
 
 # jobs:
-#   ftp-deploy:
+#   deploy-test:
 #     runs-on: ubuntu-latest
+
 #     steps:
 #       - name: Checkout code
-#         uses: actions/checkout@v3
+#         uses: actions/checkout@v2
 
-#       - name: Set up PHP
-#         uses: shivammathur/setup-php@v2
-#         with:
-#           php-version: '8.2'   # Adjust based on project needs
-#           extensions: mbstring, intl, mysqli, pdo, pdo_mysql
-#           tools: composer
-
-#       - name: Install PHP dependencies
-#         run: composer install --no-dev --prefer-dist --optimize-autoloader
-
-#       - name: Set up Node.js
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: '16'  # Specify the Node.js version you want to use
-
-#       - name: Install Node.js dependencies
-#         run: npm install
-
-#       - name: Compile assets with Vite
-#         run: npm run build  # This will run 'vite build' as specified in your package.json
-
-#       - name: Upload via FTP
+#       - name: Test FTP Upload
 #         uses: SamKirkland/FTP-Deploy-Action@4.3.0
 #         with:
 #           server: ${{ secrets.FTP_HOST }}
 #           username: ${{ secrets.FTP_USERNAME }}
 #           password: ${{ secrets.FTP_PASSWORD }}
-#           port: ${{ secrets.FTP_PORT }}  # Default is usually 21; make sure this matches your server settings
-#           local-dir: './'
-#           server-dir: '/htdocs/'  # Target directory on the FTP server
+#           port: ${{ secrets.FTP_PORT }}
+#           local-dir: ./
+#           server-dir: /htdocs/  # Use a test server directory to avoid overwriting production
 #           exclude: |
 #             **/.git*
-#             **/.github*
-#             **/node_modules*
-#             **/Documentation
-#             CONTRIBUTING.md
-#             README.md
-#             SECURITY.md
-#             .gitattributes
-#             .gitignore
-#             .github/workflows
-#             storage/logs/*
-#             storage/framework/sessions/*
-#             storage/framework/views/*
-#             storage/temp/*
-#             public/storage
-#           log-level: standard  # Choose from 'minimal', 'standard', or 'verbose'
-#           dry-run: false  # Set to 'true' for testing deployments without actual uploads
+#             **/.git*/**
+#             **/.github/**
+#             **/Documentation/**
+#             **/CONTRIBUTING.md
+#             **/README.md
+#             **/SECURITY.md
+#             **/.gitattributes
+#             **/.github/workflows/**
+#             **/.gitignore
+#             **/node_modules/**
+#             **/tests/**
+#             **/vendor/**
+#             **/.env
+#             **/storage/logs/**
+#             **/storage/framework/sessions/**
+#             **/storage/framework/views/**
+#             **/storage/temp/**
+#             **/public/storage/**
+#             **/folder/.sync-state.json
+#             **/.sync-state.json
+#           log-level: standard
+#           dry-run: false
+#           state-name: .ftp-deploy-sync-state-test.json  # Separate state file for testing
+
+#       - name: Set up PHP
+#         uses: shivammathur/setup-php@v2
+#         with:
+#           php-version: '8.2'
+#           extensions: mbstring, intl, mysqli, pdo, pdo_mysql
+#           tools: composer
+
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: '16'
+
+#       - name: Install PHP dependencies
+#         run: composer install --no-dev --prefer-dist --optimize-autoloader
+
+#       # - name: Install Node.js dependencies
+#       #   run: npm install
+
+#       - name: Compile assets with Vite
+#         run: npm run build  # Adjust based on your asset compilation needs
