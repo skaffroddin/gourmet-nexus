@@ -40,6 +40,7 @@ jobs:
             **/.github/**
             **/Documentation/**
             **/CONTRIBUTING.md
+            **/CI-CD.md
             **/README.md
             **/SECURITY.md
             **/.gitattributes
