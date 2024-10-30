@@ -1,4 +1,5 @@
 name: Test Deployment To Server
+
 on:
   push:
     branches:
@@ -11,6 +12,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, mysqli, pdo, pdo_mysql
+          tools: composer
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
 
       - name: Test FTP Upload
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
@@ -47,23 +60,11 @@ jobs:
           dry-run: false
           state-name: .ftp-deploy-sync-state-test.json  # Separate state file for testing
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, intl, mysqli, pdo, pdo_mysql
-          tools: composer
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
       - name: Install PHP dependencies
         run: composer install --no-dev --prefer-dist --optimize-autoloader
 
-      # - name: Install Node.js dependencies
-      #   run: npm install
+      - name: Install Node.js dependencies
+        run: npm install
 
       - name: Compile assets with Vite
         run: npm run build  # Adjust based on your asset compilation needs
