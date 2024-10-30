@@ -66,10 +66,12 @@ jobs:
 
       - name: Install Node.js dependencies
         run: npm install
-      - name: Vendor create
-        run: composer install
-        
+
+      - name: Copy .env file
+        run: cp server.env .env
+
       - name: Compile assets with Vite
         run: npm run build  # Adjust based on your asset compilation needs
-      - name: Artisan 
+
+      - name: Generate application key
         run: php artisan key:generate
