@@ -1,4 +1,4 @@
-name: Deploy to Test Server
+name: Test Deployment Workflow
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Update to the latest version if necessary
+        uses: actions/checkout@v2
 
       - name: Test FTP Upload
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
@@ -29,9 +29,7 @@ jobs:
             **/Documentation/**
             **/CONTRIBUTING.md
             **/README.md
-            **/CI-CD.md
             **/SECURITY.md
-            **/server.env
             **/.gitattributes
             **/.github/workflows/**
             **/.gitignore
@@ -46,8 +44,6 @@ jobs:
             **/public/storage/**
             **/folder/.sync-state.json
             **/.sync-state.json
-            **/.ftp-deploy-sync-state-test.json
-          # Options placed at the end
           log-level: standard
           dry-run: false
           state-name: .ftp-deploy-sync-state-test.json  # Separate state file for testing
@@ -71,4 +67,4 @@ jobs:
         run: npm install
 
       - name: Compile assets with Vite
-        run: npm run build
+        run: npm run build  # Adjust based on your asset compilation needs
