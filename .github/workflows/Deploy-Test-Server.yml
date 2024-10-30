@@ -33,4 +33,4 @@ jobs:
           dry-run: false
 
       - name: Finalize Setup on Server
-        run: curl -X GET "https://${{ secrets.FTP_HOST }}/setup.php?token=${{ secrets.SETUP_TOKEN }}"
+        run: curl -X GET "http://${{ secrets.FTP_HOST }}/setup.php?token=${{ secrets.SETUP_TOKEN }}"
