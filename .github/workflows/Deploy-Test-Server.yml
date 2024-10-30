@@ -1,77 +1,36 @@
-name: Test Deployment To Test Server
+name: Deploy to Test InfinityFree
 
 on:
   push:
     branches:
-      - test  # Use a test branch to verify the deployment setup before using it on main
+      - test  # Change to your main branch
 
 jobs:
-  deploy-test:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, intl, mysqli, pdo, pdo_mysql
-          tools: composer
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: Test FTP Upload
+      - name: Upload files via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
           server: ${{ secrets.FTP_HOST_TEST }}
           username: ${{ secrets.FTP_USERNAME_TEST }}
           password: ${{ secrets.FTP_PASSWORD_TEST }}
           port: ${{ secrets.FTP_PORT_TEST }}
-          local-dir: ./
-          server-dir: /htdocs/  # Use a test server directory to avoid overwriting production
+          local-dir: ./  # Local directory to upload
+          server-dir: /htdocs/  # Adjust according to your server directory
           exclude: |
             **/.git*
             **/.git*/**
             **/.github/**
-            **/Documentation/**
-            **/CONTRIBUTING.md
-            **/CI-CD.md
-            **/README.md
-            **/SECURITY.md
-            **/.gitattributes
-            **/.github/workflows/**
-            **/.gitignore
             **/node_modules/**
-            **/tests/**
-            **/vendor/**
             **/.env
-            **/storage/logs/**
-            **/storage/framework/sessions/**
-            **/storage/framework/views/**
-            **/storage/temp/**
-            **/public/storage/**
-            **/folder/.sync-state.json
-            **/.sync-state.json
+            **/setup.php  # Exclude setup.php for security
           log-level: standard
           dry-run: false
-          state-name: .ftp-deploy-sync-state-test.json  # Separate state file for testing
 
-      - name: Install PHP dependencies
-        run: composer install --no-dev --prefer-dist --optimize-autoloader
-
-      - name: Install Node.js dependencies
-        run: npm install
-
-      - name: Copy .env file
-        run: cp .env.example .env
-
-      - name: Compile assets with Vite
-        run: npm run build  # Adjust based on your asset compilation needs
-
-      - name: Generate application key
-        run: php artisan key:generate
+      - name: Finalize Setup on Server
+        run: curl -X GET "https://${{ secrets.FTP_HOST }}/setup.php?token=${{ secrets.SETUP_TOKEN }}"
