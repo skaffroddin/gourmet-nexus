@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy-test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -24,6 +24,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16'
+
+      - name: Install PHP dependencies
+        run: composer install --no-dev --prefer-dist --optimize-autoloader
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Compile assets with Vite
+        run: npm run build  # Adjust based on your asset compilation needs
 
       - name: Test FTP Upload
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
@@ -59,12 +68,3 @@ jobs:
           log-level: standard
           dry-run: false
           state-name: .ftp-deploy-sync-state-test.json  # Separate state file for testing
-
-      - name: Install PHP dependencies
-        run: composer install --no-dev --prefer-dist --optimize-autoloader
-
-      - name: Install Node.js dependencies
-        run: npm install
-
-      - name: Compile assets with Vite
-        run: npm run build  # Adjust based on your asset compilation needs
