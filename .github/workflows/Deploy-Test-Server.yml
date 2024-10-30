@@ -68,7 +68,7 @@ jobs:
         run: npm install
 
       - name: Copy .env file
-        run: cp server.env .env
+        run: cp .env.example .env
 
       - name: Compile assets with Vite
         run: npm run build  # Adjust based on your asset compilation needs
