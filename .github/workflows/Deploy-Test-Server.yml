@@ -1,5 +1,4 @@
-name: Test Deployment Workflow
-
+name: Test Deployment To Server
 on:
   push:
     branches:
