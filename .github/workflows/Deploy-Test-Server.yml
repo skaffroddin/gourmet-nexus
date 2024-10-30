@@ -1,21 +1,22 @@
-name: Deploy to Test Server
+name: Deploy Test Server FTP 
 
 on:
   push:
     branches:
-      - test  # Deploy when changes are pushed to the 'test-branch'
+      - test  # Only run on the 'test' branch for testing purposes
 
 jobs:
-  ftp-deploy:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'   # Adjust based on project needs
+          php-version: '8.2'  # Adjust based on project requirements
           extensions: mbstring, intl, mysqli, pdo, pdo_mysql
           tools: composer
 
@@ -25,41 +26,45 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'  # Specify the Node.js version you want to use
+          node-version: '16'  # Specify the desired Node.js version
 
       - name: Install Node.js dependencies
         run: npm install
 
       - name: Compile assets with Vite
-        run: npm run build  # This will run 'vite build' as specified in your package.json
+        run: npm run build  # Adjust based on your asset compilation needs
 
-      - name: Upload via FTP to Test Server
+      - name: Deploy to Test FTP Server
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
           server: ${{ secrets.FTP_HOST_TEST }}
           username: ${{ secrets.FTP_USERNAME_TEST }}
           password: ${{ secrets.FTP_PASSWORD_TEST }}
-          port: ${{ secrets.FTP_PORT_TEST }}  # Make sure this matches your test server settings
-          local-dir: './'
-          server-dir: '/htdocs/'  # Target directory on the FTP server
+          port: ${{ secrets.FTP_PORT_TEST }}
+          local-dir: ./  # Your project root directory
+          server-dir: /htdocs/  # Target directory on the test server
           exclude: |
-            .git/**                  # Exclude .git directory and all contents
-            .github/**               # Exclude .github directory and all contents
-            Documentation/           # Exclude Documentation directory
-            CONTRIBUTING.md          # Exclude CONTRIBUTING.md
-            README.md                # Exclude README.md
-            SECURITY.md              # Exclude SECURITY.md
-            .gitattributes           # Exclude .gitattributes
-            .github/workflows/**     # Exclude .github/workflows directory and all contents
-            .gitignore               # Exclude .gitignore
-            **/node_modules/**       # Exclude all node_modules directories and contents
-            **/tests/**              # Exclude all tests directories and contents
-            **/vendor/**             # Exclude all vendor directories and contents
-            .env                     # Exclude .env file
-            storage/logs/**          # Exclude all logs directories and contents
-            storage/framework/sessions/** # Exclude all sessions directories and contents
-            storage/framework/views/**    # Exclude all views directories and contents
-            storage/temp/**          # Exclude all temp directories and contents
-            public/storage/**        # Exclude all public storage directories and contents
-          log-level: standard        # Choose from 'minimal', 'standard', or 'verbose'
-          dry-run: false             # Set to 'true' for testing deployments without actual uploads
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/Documentation/**
+            **/CONTRIBUTING.md
+            **/README.md
+            **/SECURITY.md
+            **/.gitattributes
+            **/.github/workflows/**
+            **/.gitignore
+            **/node_modules/**
+            **/tests/**
+            **/vendor/**
+            **/.env
+            **/storage/logs/**
+            **/storage/framework/sessions/**
+            **/storage/framework/views/**
+            **/storage/temp/**
+            **/public/storage/**
+            **/folder/.sync-state.json
+            **/.sync-state.json
+          log-level: standard
+          dry-run: false
+          state-name: .ftp-deploy-sync-state-test.json  # Separate state file for testing
