@@ -34,14 +34,14 @@ jobs:
         run: npm run build
 
       - name: Upload via FTP to Test Server
-        uses: SamKirkland/FTP-Deploy-Action@4.4.0
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
           server: ${{ secrets.FTP_HOST_TEST }}
           username: ${{ secrets.FTP_USERNAME_TEST }}
           password: ${{ secrets.FTP_PASSWORD_TEST }}
-          port: ${{ secrets.FTP_PORT_TEST }}  # Default is usually 21; adjust based on your server
+          port: ${{ secrets.FTP_PORT_TEST }}  # Adjust if needed
           local-dir: './'
-          server-dir: '/htdocs/'  # Specify your test directory on the FTP server
+          server-dir: '/htdocs/'  # Adjust for your test server path
           exclude: |
             **/.git*
             **/node_modules*
@@ -62,4 +62,4 @@ jobs:
             .github/workflows
             .gitignore
           log-level: standard
-          dry-run: false  # Set to 'true' for a test run without deploying
+          dry-run: false
