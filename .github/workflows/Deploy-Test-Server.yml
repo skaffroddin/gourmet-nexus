@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Updated to v3
+        uses: actions/checkout@v3  # Using version 3
 
       - name: Upload files via FTP
-        uses: SamKirkland/FTP-Deploy-Action@4.4.0  # Updated to 4.4.0 or higher
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0  # Use the latest stable version
         with:
           server: ${{ secrets.FTP_HOST_TEST }}
           username: ${{ secrets.FTP_USERNAME_TEST }}
@@ -42,6 +42,6 @@ jobs:
 
       - name: Run Laravel Setup
         run: |
-          php artisan migrate --force  # Run migrations
+          # php artisan migrate --force  # Run migrations
           php artisan config:cache      # Cache the configuration
           php artisan route:cache       # Cache the routes
