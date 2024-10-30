@@ -31,4 +31,19 @@ class MyController extends Controller
     {
         return view('appointment');
     }
+
+    function admin_table():View
+    {
+        return view('admin');
+    }
+
+    function user_table():View
+    {
+        return view('user');
+    }
+
+    function chef_table():View
+    {
+        return view('chef');
+    }
 }
