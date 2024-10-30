@@ -1,48 +1,27 @@
-name: Deploy Test Server FTP 
+name: Deploy to Test Server
 
 on:
   push:
     branches:
-      - test  # Only run on the 'test' branch for testing purposes
+      - test  # Use a test branch to verify the deployment setup before using it on main
 
 jobs:
-  deploy:
+  deploy-test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3  # Update to the latest version if necessary
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'  # Adjust based on project requirements
-          extensions: mbstring, intl, mysqli, pdo, pdo_mysql
-          tools: composer
-
-      - name: Install PHP dependencies
-        run: composer install --no-dev --prefer-dist --optimize-autoloader
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'  # Specify the desired Node.js version
-
-      - name: Install Node.js dependencies
-        run: npm install
-
-      - name: Compile assets with Vite
-        run: npm run build  # Adjust based on your asset compilation needs
-
-      - name: Deploy to Test FTP Server
+      - name: Test FTP Upload
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
           server: ${{ secrets.FTP_HOST_TEST }}
           username: ${{ secrets.FTP_USERNAME_TEST }}
           password: ${{ secrets.FTP_PASSWORD_TEST }}
           port: ${{ secrets.FTP_PORT_TEST }}
-          local-dir: ./  # Your project root directory
-          server-dir: /htdocs/  # Target directory on the test server
+          local-dir: ./
+          server-dir: /htdocs/  # Use a test server directory to avoid overwriting production
           exclude: |
             **/.git*
             **/.git*/**
@@ -50,7 +29,9 @@ jobs:
             **/Documentation/**
             **/CONTRIBUTING.md
             **/README.md
+            **/CI-CD.md
             **/SECURITY.md
+            **/server.env
             **/.gitattributes
             **/.github/workflows/**
             **/.gitignore
@@ -65,6 +46,29 @@ jobs:
             **/public/storage/**
             **/folder/.sync-state.json
             **/.sync-state.json
+            **/.ftp-deploy-sync-state-test.json
+          # Options placed at the end
           log-level: standard
           dry-run: false
           state-name: .ftp-deploy-sync-state-test.json  # Separate state file for testing
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, mysqli, pdo, pdo_mysql
+          tools: composer
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install PHP dependencies
+        run: composer install --no-dev --prefer-dist --optimize-autoloader
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Compile assets with Vite
+        run: npm run build
