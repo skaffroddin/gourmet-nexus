@@ -32,5 +32,16 @@ jobs:
           log-level: standard
           dry-run: false
 
-      - name: Finalize Setup on Server
-        run: curl -X GET "http://${{ secrets.FTP_HOST }}/setup.php?token=${{ secrets.SETUP_TOKEN }}"
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'  # Specify your PHP version here
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --prefer-dist --optimize-autoloader
+
+      - name: Run Laravel Setup
+        run: |
+          php artisan migrate --force  # Run migrations
+          php artisan config:cache      # Cache the configuration
+          php artisan route:cache       # Cache the routes
