@@ -15,7 +15,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'   # Adjust based on project needs
+          php-version: '8.2'
           extensions: mbstring, intl, mysqli, pdo, pdo_mysql
           tools: composer
 
@@ -25,38 +25,41 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'  # Specify the Node.js version you want to use
+          node-version: '16'
 
       - name: Install Node.js dependencies
         run: npm install
 
       - name: Compile assets with Vite
-        run: npm run build  # This will run 'vite build' as specified in your package.json
+        run: npm run build
 
-      - name: Upload via FTP
-        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      - name: Upload via FTP to Test Server
+        uses: SamKirkland/FTP-Deploy-Action@4.4.0
         with:
           server: ${{ secrets.FTP_HOST_TEST }}
           username: ${{ secrets.FTP_USERNAME_TEST }}
           password: ${{ secrets.FTP_PASSWORD_TEST }}
-          port: ${{ secrets.FTP_PORT_TEST }}  # Default is usually 21; make sure this matches your server settings
+          port: ${{ secrets.FTP_PORT_TEST }}  # Default is usually 21; adjust based on your server
           local-dir: './'
-          server-dir: '/htdocs/'  # Target directory on the FTP server
+          server-dir: '/htdocs/'  # Specify your test directory on the FTP server
           exclude: |
             **/.git*
-            **/.github*
             **/node_modules*
-            **/Documentation
-            CONTRIBUTING.md
-            README.md
-            SECURITY.md
-            .gitattributes
-            .gitignore
-            .github/workflows
+            **/tests*
+            **/vendor*
+            .env
             storage/logs/*
             storage/framework/sessions/*
             storage/framework/views/*
             storage/temp/*
             public/storage
-          log-level: standard  # Choose from 'minimal', 'standard', or 'verbose'
-          dry-run: false  # Set to 'true' for testing deployments without actual uploads
+            .github
+            Documentation
+            CONTRIBUTING.md
+            README.md
+            SECURITY.md
+            .gitattributes
+            .github/workflows
+            .gitignore
+          log-level: standard
+          dry-run: false  # Set to 'true' for a test run without deploying
