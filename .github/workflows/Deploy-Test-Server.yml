@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  # Updated to v3
 
       - name: Upload files via FTP
-        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        uses: SamKirkland/FTP-Deploy-Action@4.4.0  # Updated to 4.4.0 or higher
         with:
           server: ${{ secrets.FTP_HOST_TEST }}
           username: ${{ secrets.FTP_USERNAME_TEST }}
