@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    @include('layouts.header') <!-- Include the header -->
 
     <div class="text-4xl text-center font-bold mt-10 text-[#007bff]">
         Register
@@ -136,6 +137,7 @@
         });
     </script>
 
+    @include('layouts.footer') <!-- Include the footer -->
 </body>
 
 </html>

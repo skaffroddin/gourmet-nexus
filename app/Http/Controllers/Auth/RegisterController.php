@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\User; // Make sure to import the User model
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail; // Add this for sending OTP
+use Illuminate\Support\Str; // For generating random strings
 
 class RegisterController extends Controller
 {
@@ -40,7 +42,7 @@ class RegisterController extends Controller
             return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
         }
 
-        // Create the user
+        // Create the user instance
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
@@ -62,6 +64,41 @@ class RegisterController extends Controller
 
         $user->save(); // Save the user to the database
 
-        return response()->json(['success' => true, 'redirect' => route('login')]); // Redirect to login or a desired page
+        // Generate OTP
+        $otp = Str::random(6); // Generate a random 6-character OTP
+        $user->otp = $otp; // Assuming you have added an `otp` column in the users table
+        $user->save();
+
+        // Send OTP to user's email
+        Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($user) {
+            $message->to($user->email)
+                    ->subject('Your OTP for Registration');
+        });
+
+        return response()->json(['success' => true, 'message' => 'OTP sent to your email. Please verify.', 'redirect' => route('otp.verify', $user->id)]); // Redirect to OTP verification page
+    }
+
+    // Handle OTP verification
+    public function verifyOtp(Request $request, $userId)
+    {
+        $user = User::findOrFail($userId);
+        
+        $validator = Validator::make($request->all(), [
+            'otp' => 'required|string|size:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+        }
+
+        // Check if the OTP is correct
+        if ($request->otp !== $user->otp) {
+            return response()->json(['success' => false, 'message' => 'Invalid OTP.']);
+        }
+
+        // If OTP is correct, you can now finalize registration (if needed)
+        // E.g., mark the user as verified, send a welcome email, etc.
+
+        return response()->json(['success' => true, 'message' => 'Registration successful! You can now log in.', 'redirect' => route('login')]);
     }
 }

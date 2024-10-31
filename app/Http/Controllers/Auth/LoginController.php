@@ -1,6 +1,4 @@
-<?php
-
-
+<?php 
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -11,22 +9,21 @@ class LoginController extends Controller
 {
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
+        // Validate the request
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
-            // Authentication passed
-            return response()->json(['success' => 'Login successful!']);
+        // Attempt to log the user in
+        if (Auth::attempt($request->only('email', 'password'))) {
+            // Redirect to intended page or default route
+            return redirect()->intended('/home'); // Change '/home' to your desired route
         }
 
-        return response()->json(['errors' => ['email' => ['The provided credentials are incorrect.']]], 422);
-    }
-
-    public function logout(Request $request)
-    {
-        Auth::logout();
-        return redirect('/'); // Redirect to home after logout
+        // Redirect back with an error message
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
     }
 }
