@@ -11,6 +11,16 @@ use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\OtpController;
 
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/recipes', [RecipeController::class, 'index'])->name('recipes');
+Route::get('/meal-plans', [MealPlanController::class, 'index'])->name('meal-plans');
+Route::get('/register', [AuthController::class, 'register'])->name('register');
+Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+
+
+
+
 // Admin Routes
 Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
