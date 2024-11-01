@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -7,15 +8,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail; // Add this for sending OTP
-use Illuminate\Support\Str; // For generating random strings
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
     // Show the registration form
-    public function showRegistrationForm()
+    public function create()
     {
-        return view('register'); // Ensure this points to your Blade view
+        return view('auth.register'); // Ensure this points to your Blade view
     }
 
     // Handle the registration request
@@ -46,7 +47,7 @@ class RegisterController extends Controller
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = Hash::make($request->password); // Hash the password
+        $user->password = Hash::make($request->password);
         $user->date_of_birth = $request->date_of_birth;
         $user->phone_number = $request->phone_number;
         $user->state = $request->state;
@@ -62,11 +63,12 @@ class RegisterController extends Controller
             $user->profile_photo = $filePath;
         }
 
-        $user->save(); // Save the user to the database
+        $user->save();
 
-        // Generate OTP
-        $otp = Str::random(6); // Generate a random 6-character OTP
-        $user->otp = $otp; // Assuming you have added an `otp` column in the users table
+        // Generate OTP (commented out for now)
+        /*
+        $otp = Str::random(6);
+        $user->otp = $otp;
         $user->save();
 
         // Send OTP to user's email
@@ -74,11 +76,13 @@ class RegisterController extends Controller
             $message->to($user->email)
                     ->subject('Your OTP for Registration');
         });
+        */
 
-        return response()->json(['success' => true, 'message' => 'OTP sent to your email. Please verify.', 'redirect' => route('otp.verify', $user->id)]); // Redirect to OTP verification page
+        return response()->json(['success' => true, 'message' => 'Registration successful! Please verify your account.', 'redirect' => route('login')]);
     }
 
-    // Handle OTP verification
+    // Handle OTP verification (commented out for now)
+    /*
     public function verifyOtp(Request $request, $userId)
     {
         $user = User::findOrFail($userId);
@@ -96,9 +100,8 @@ class RegisterController extends Controller
             return response()->json(['success' => false, 'message' => 'Invalid OTP.']);
         }
 
-        // If OTP is correct, you can now finalize registration (if needed)
-        // E.g., mark the user as verified, send a welcome email, etc.
-
+        // If OTP is correct
         return response()->json(['success' => true, 'message' => 'Registration successful! You can now log in.', 'redirect' => route('login')]);
     }
+    */
 }

@@ -9,21 +9,21 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // User's full name
-            $table->string('email')->unique(); // User's email address
-            $table->string('password'); // Hashed password
-            $table->date('date_of_birth'); // User's date of birth
-            $table->string('phone_number'); // User's phone number
-            $table->string('state'); // State of residence
-            $table->string('country'); // Country of residence
-            $table->string('gender'); // Gender (Male/Female/Other)
-            $table->string('role'); // Role (Chef/User)
-            $table->string('chef_expertise')->nullable(); // Chef's area of expertise
-            $table->decimal('chef_hourly_rate', 8, 2)->nullable(); // Chef's hourly rate
-            $table->string('profile_photo')->nullable(); // Profile picture path
-            $table->string('otp')->nullable(); // OTP for email verification
-            $table->boolean('is_verified')->default(false); // Email verification status
-            $table->timestamps(); // created_at and updated_at
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->date('date_of_birth');
+            $table->string('phone_number');
+            $table->string('state');
+            $table->string('country');
+            $table->string('gender');
+            $table->string('role'); // chef or user
+            $table->string('chef_expertise')->nullable();
+            $table->decimal('chef_hourly_rate', 8, 2)->nullable();
+            $table->string('profile_photo')->nullable();
+            $table->rememberToken();
+            $table->timestamps();
         });
     }
 
