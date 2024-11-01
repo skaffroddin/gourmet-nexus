@@ -13,24 +13,25 @@ class LoginController extends Controller
     }
 
     // Handle the login request
-    public function login(Request $request)
+    function login_submit(Request $request)
     {
-        // Validate the request
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        $email = $request->input('email');
+        $pass = $request->input('password');
+        $loginData = DB::table('reg_table')->where('email','=',$email)->orWhere('phone')->get();
 
-        // Attempt to log the user in
-        if (Auth::attempt($request->only('email', 'password'))) {
-            // Redirect to intended page or default route
-            return redirect()->intended('/home'); // Change '/home' to your desired route
+        if (empty($loginData[0])) {
+            return redirect('login')->with('message','User not found');
+        }else{
+            $dbpass = $loginData[0]->password;
+            if ($pass != $dbpass) {
+                return redirect('login')->with('message','Password does not match');
+            } else {
+                $uid = $loginData[0]->user_id;
+                $request->session()->put('ses_id',$uid);
+            }
+
         }
 
-        // Redirect back with an error message
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
     }
 
     // Handle user logout
