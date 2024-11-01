@@ -1,39 +1,56 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use App\Models\Feedback; // Make sure to import the Feedback model
 use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\Session;
 
 class FeedbackController extends Controller
 {
-    // Display Feedback Form
-    public function create(Request $request)
-    {
-        // Example: You might retrieve an appointment ID based on the current user or a parameter
-        $appointment_id = 12345; // Example value, replace with dynamic data as needed
-
-        return view('feedback', compact('appointment_id'));
+    // Display a listing of feedback
+    public function index() {
+        $feedbacks = Feedback::all(); // Get all feedback
+        return view('admin.feedback.index', compact('feedbacks'));
     }
 
-    // Handle Feedback Form Submission
-    public function store(Request $request)
-    {
-        // Validate incoming request data
-        $validatedData = $request->validate([
-            'appointment_id' => 'required|integer',
-            'rating' => 'required|integer|min:1|max:5',
-            'feedback_message' => 'nullable|string|max:1000'
+    // Show the form for creating new feedback (optional, if you want to allow manual feedback entry)
+    public function create() {
+        return view('admin.feedback.create');
+    }
+
+    // Store newly created feedback in storage (optional)
+    public function store(Request $request) {
+        $request->validate([
+            'user_id' => 'required|exists:users,id', // Assuming you have a user model
+            'chef_id' => 'required|exists:chefs,id', // Assuming you have a chef model
+            'content' => 'required|string|max:1000', // Adjust max length as needed
+            // Add more validation rules as needed
         ]);
 
-        // Save or process the feedback as needed
-        // Feedback::create($validatedData); // Example database save (requires a Feedback model)
+        Feedback::create($request->all()); // Create a new feedback
+        return redirect()->route('admin.feedback.index')->with('success', 'Feedback submitted successfully.');
+    }
 
-        // Store success message in session
-        Session::flash('success', 'Thank you for your feedback!');
+    // Show the form for editing the specified feedback
+    public function edit(Feedback $feedback) {
+        return view('admin.feedback.edit', compact('feedback'));
+    }
 
-        // Redirect back to the form
-        return redirect()->route('feedback.create');
+    // Update the specified feedback in storage
+    public function update(Request $request, Feedback $feedback) {
+        $request->validate([
+            'content' => 'required|string|max:1000',
+            // Add more validation rules as needed
+        ]);
+
+        $feedback->update($request->all()); // Update the feedback
+        return redirect()->route('admin.feedback.index')->with('success', 'Feedback updated successfully.');
+    }
+
+    // Remove the specified feedback from storage
+    public function destroy(Feedback $feedback) {
+        $feedback->delete(); // Delete the feedback
+        return redirect()->route('admin.feedback.index')->with('success', 'Feedback deleted successfully.');
     }
 }
